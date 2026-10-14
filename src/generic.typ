@@ -51,8 +51,10 @@
   height: auto,
   module-size: auto,
   fill: black,
+  finder-fill: auto,
   background-fill: none,
   default-quiet-zone: 1,
+  finder-patterns: size => (),
 ) = context {
   let options = options
   for (key, value) in options.pairs() {
@@ -93,6 +95,25 @@
     height = path.height * module-size
   }
 
+  // Each finder pattern is three nested squares (7, 5 and 3 modules), which the even-odd rule turns
+  // into its dark ring and core. Appended to the barcode path, they cancel the finder modules out.
+  let finder-segments = if finder-fill == auto {
+    ()
+  } else {
+    finder-patterns(path.width - quiet-zone * 2)
+      .map(((x, y)) => (7, 5, 3).map(size => {
+        let offset = quiet-zone + (7 - size) / 2
+        (
+          curve.move(((x + offset) * 1pt, (y + offset) * 1pt)),
+          curve.line((size * 1pt, 0pt), relative: true),
+          curve.line((0pt, size * 1pt), relative: true),
+          curve.line((-size * 1pt, 0pt), relative: true),
+          curve.close(),
+        )
+      }))
+      .flatten()
+  }
+
   block(width: width, height: height, fill: background-fill, {
     set align(top + left)
     scale((module-size / 1pt) * 100%, origin: top + left, {
@@ -100,7 +121,15 @@
         fill: fill,
         fill-rule: "even-odd",
         ..path.segments,
+        ..finder-segments,
       )
+      if finder-segments != () {
+        place(top + left, curve(
+          fill: finder-fill,
+          fill-rule: "even-odd",
+          ..finder-segments,
+        ))
+      }
     })
   })
 }

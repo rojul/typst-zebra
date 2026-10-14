@@ -37,6 +37,11 @@ Both `datamatrix` and `qrcode` share the same arguments.
   `module-size` is the size of a single black or white square.
 
 - `fill`: `color` | `gradient` (default: `black`)
+- `finder-fill`: `auto` | `color` | `gradient` (default: `auto`, QR codes only)
+
+  The fill of the finder patterns, the squares in the corners of a QR code.
+  `auto` uses `fill`.
+
 - `background-fill`: `none` | `color` | `gradient` (default: `none`)
 
 Examples:
@@ -54,6 +59,7 @@ Examples:
 #qrcode("data", module-size: 0.5em)
 
 #qrcode("data", fill: purple, background-fill: lime)
+#qrcode("data", finder-fill: red)
 ```
 
 ## Data Matrix

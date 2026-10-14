@@ -194,6 +194,19 @@
 )
 
 #case(
+  name: "finder-fill: red | rainbow, versions: normal | micro",
+  qrcode("0", finder-fill: red),
+  qrcode("0" * 100, finder-fill: red),
+  qrcode("0", options: (versions: "micro"), finder-fill: red),
+  qrcode("0", fill: luma(40%), finder-fill: gradient.conic(..color.map.rainbow)),
+)
+#case(
+  name: "finder-fill + quiet-zone + background-fill",
+  qrcode("0", quiet-zone: true, background-fill: white, finder-fill: red),
+  qrcode("0", quiet-zone: 1, background-fill: white, finder-fill: red),
+)
+
+#case(
   name: "ec-level: l | m | q | h",
   qrcode("0" * 35, options: (ec-level: "l")),
   qrcode("0" * 35, options: (ec-level: "m")),
